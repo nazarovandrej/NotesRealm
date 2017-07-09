@@ -1,9 +1,6 @@
 package com.github.andrejnazarov.notesrealm;
 
-
-import android.app.backup.BackupDataInputStream;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,27 +14,11 @@ import android.widget.TextView;
 
 public class BasicFragment extends Fragment {
 
-    private static final String EXTRA_TITLE_KEY = "extra_title";
-
     private TextView mTitleTextView;
     private String mTitle;
 
-    public static Bundle newArgs(@NonNull String title) {
-        Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_TITLE_KEY, title);
-        return bundle;
-    }
-
-    public static BasicFragment newInstance(@NonNull String title) {
-        BasicFragment fragment = new BasicFragment();
-        fragment.setArguments(newArgs(title));
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTitle = getArguments().getString(EXTRA_TITLE_KEY);
+    public static BasicFragment newInstance() {
+        return new BasicFragment();
     }
 
     @Nullable
