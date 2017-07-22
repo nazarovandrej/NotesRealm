@@ -38,6 +38,7 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     private String mNoteBody;
 
     private Realm mRealm;
+    private boolean mNoteEdited;
 
     public static Intent createExplicitIntent(Context context,
                                               String categoryName,
@@ -64,10 +65,15 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            finishActivity();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity();
     }
 
     @Override
@@ -83,8 +89,35 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
                         }).show();
                 break;
             case R.id.edit_note_button:
-                // TODO: 22.07.17 edit button
+                Snackbar.make(v, R.string.edit_note_question, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.yes, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                editNote();
+                            }
+                        }).show();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                mNoteTitleTextView.setText(data.getStringExtra(EXTRA_NOTE_TITLE));
+                mNoteBodyTextView.setText(data.getStringExtra(EXTRA_NOTE_BODY));
+                mNoteEdited = true;
+            }
+        }
+    }
+
+    //region private methods
+
+    private void finishActivity() {
+        if (mNoteEdited) {
+            finishWithResultOK();
+        } else {
+            finish();
         }
     }
 
@@ -134,9 +167,18 @@ public class NoteDetailActivity extends AppCompatActivity implements View.OnClic
         finishWithResultOK();
     }
 
-    private void finishWithResultOK(){
+    private void finishWithResultOK() {
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
     }
+
+    private void editNote() {
+        startActivityForResult(EditNoteActivity.createExplicitIntent(getApplicationContext(),
+                mNoteTitle,
+                mNoteId,
+                mNoteBody), 2);
+    }
+
+    //endregion
 }
