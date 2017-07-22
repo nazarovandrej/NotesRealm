@@ -1,5 +1,6 @@
 package com.github.andrejnazarov.notesrealm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,9 +16,12 @@ import com.github.andrejnazarov.notesrealm.adapter.NoteAdapter;
 import com.github.andrejnazarov.notesrealm.manager.RealmManager;
 import com.github.andrejnazarov.notesrealm.model.Category;
 import com.github.andrejnazarov.notesrealm.model.Note;
+import com.github.andrejnazarov.notesrealm.ui.CreateNoteActivity;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * @author Nazarov on 09.07.17.
@@ -63,12 +67,20 @@ public class BasicFragment extends Fragment {
                         .setAction(R.string.yes, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                // TODO: 16.07.17 go to new Activity to create note
-                                Toast.makeText(getContext(), "Переход на новую активити", Toast.LENGTH_LONG).show();
+                                startActivityForResult(CreateNoteActivity.createExplicitIntent(getContext(), mTitle), 1);
                             }
                         }).show();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     public String getTitle() {
