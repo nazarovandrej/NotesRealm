@@ -25,7 +25,8 @@ import io.realm.Realm;
  */
 public class CreateNoteActivity extends BaseNoteActivity {
 
-    public static Intent createExplicitIntent(Context context, String categoryName) {
+    public static Intent createExplicitIntent(Context context,
+                                              String categoryName) {
         Intent intent = new Intent(context, CreateNoteActivity.class);
         intent.putExtra(EXTRA_CATEGORY_NAME, categoryName);
         return intent;
@@ -83,7 +84,7 @@ public class CreateNoteActivity extends BaseNoteActivity {
 
     private void saveNote(View view) {
         if (inputDataCorrect()) {
-            Snackbar.make(view, getString(R.string.save_note_question), Snackbar.LENGTH_LONG)
+            Snackbar.make(view, R.string.save_note_question, Snackbar.LENGTH_LONG)
                     .setAction(R.string.yes, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
